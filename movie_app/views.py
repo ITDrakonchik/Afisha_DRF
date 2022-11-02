@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer
+from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer, MovieReviewsSerializers
 from .models import Director, Movie, Review
 from rest_framework import status
 
@@ -57,4 +57,11 @@ def review_detail_view(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND,
                         data={'error': 'Review not found!'})
     serializer = MovieSerializer(review)
+    return Response(data=serializer.data)
+
+
+@api_view(['GET'])
+def movies_review_views(request):
+    movie = Movie.objects.all()
+    serializer = MovieReviewsSerializers(movie, many=True)
     return Response(data=serializer.data)
